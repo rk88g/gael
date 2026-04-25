@@ -47,6 +47,7 @@ body::selection {
   z-index: 40;
   pointer-events: none;
   opacity: 0;
+  contain: layout paint style;
   transition: opacity 220ms ease;
 }
 
@@ -61,13 +62,21 @@ body::selection {
   font-family: "Cormorant Garamond", serif;
   font-size: clamp(1.2rem, 1.6vw, 1.65rem);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.08em;
   color: rgba(255, 226, 235, 0.92);
   text-shadow:
     0 0 14px rgba(255, 108, 154, 0.28),
     0 0 30px rgba(255, 108, 154, 0.12);
   will-change: transform, opacity;
   user-select: none;
+}
+
+.cursor-name-heart {
+  color: rgba(255, 123, 167, 0.96);
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  text-shadow:
+    0 0 12px rgba(255, 89, 142, 0.34),
+    0 0 22px rgba(255, 89, 142, 0.18);
 }
 
 .touch-gael-wave {
