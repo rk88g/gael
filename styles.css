@@ -367,7 +367,9 @@ h2 {
 .letter-card {
   position: relative;
   padding: clamp(1.5rem, 4vw, 3rem);
+  height: min(76vh, 880px);
   border-radius: var(--radius-xl);
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(33, 14, 23, 0.95), rgba(17, 10, 15, 0.95)),
     var(--surface-strong);
@@ -380,6 +382,39 @@ h2 {
   border-radius: calc(var(--radius-xl) - 12px);
   border: 1px solid rgba(255, 223, 231, 0.08);
   pointer-events: none;
+}
+
+.letter-scroll {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: clamp(0.45rem, 1vw, 0.9rem);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 126, 166, 0.75) rgba(255, 255, 255, 0.06);
+}
+
+.letter-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.letter-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255, 131, 167, 0.95), rgba(171, 23, 65, 0.95));
+  border-radius: 999px;
+  border: 2px solid rgba(22, 11, 18, 0.85);
+}
+
+.letter-title {
+  position: relative;
+  margin: 0 0 1.5rem;
+  padding-right: 4.5rem;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.95;
+  color: var(--gold);
 }
 
 .wax-seal {
@@ -412,6 +447,11 @@ h2 {
   margin-top: 2.2rem;
   font-size: 2rem;
   color: var(--gold);
+}
+
+.letter-vow {
+  font-size: 1.18rem;
+  color: #fff3f7;
 }
 
 .reasons-grid {
@@ -613,6 +653,10 @@ h2 {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .letter-card {
+    height: min(72vh, 820px);
+  }
 }
 
 @media (max-width: 720px) {
@@ -649,6 +693,16 @@ h2 {
     grid-template-columns: 1fr;
   }
 
+  .letter-card {
+    height: 70vh;
+    min-height: 560px;
+    padding: 1.3rem;
+  }
+
+  .letter-title {
+    padding-right: 3.6rem;
+  }
+
   .pulse-heart {
     top: 2rem;
     right: 2rem;
@@ -681,4 +735,3 @@ h2 {
     scroll-behavior: auto !important;
   }
 }
-
