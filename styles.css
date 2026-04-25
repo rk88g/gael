@@ -41,6 +41,19 @@ body::selection {
   background: rgba(255, 107, 146, 0.4);
 }
 
+.no-select,
+.no-select * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.no-select img,
+.no-select a,
+.no-select button {
+  -webkit-user-drag: none;
+}
+
 .cursor-name-trail {
   position: fixed;
   inset: 0;
