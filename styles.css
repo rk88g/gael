@@ -41,6 +41,35 @@ body::selection {
   background: rgba(255, 107, 146, 0.4);
 }
 
+.cursor-name-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.cursor-name-trail.is-active {
+  opacity: 1;
+}
+
+.cursor-name-letter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.2rem, 1.6vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(255, 226, 235, 0.92);
+  text-shadow:
+    0 0 14px rgba(255, 108, 154, 0.28),
+    0 0 30px rgba(255, 108, 154, 0.12);
+  will-change: transform, opacity;
+  user-select: none;
+}
+
 .page-shell {
   position: relative;
   isolation: isolate;
@@ -826,6 +855,10 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .cursor-name-trail {
+    display: none;
+  }
+
   *,
   *::before,
   *::after {
