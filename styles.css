@@ -437,6 +437,91 @@ h2 {
   border: 2px solid rgba(22, 11, 18, 0.85);
 }
 
+.eye-whisper {
+  position: relative;
+  width: min(82%, 560px);
+  height: clamp(94px, 11vw, 138px);
+  margin: 1.8rem 0 2.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 208, 223, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 244, 247, 0.06), rgba(255, 255, 255, 0.01)),
+    rgba(16, 8, 13, 0.46);
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 245, 248, 0.05);
+  pointer-events: none;
+  transform: translate3d(var(--eye-shift-x, 0px), var(--eye-shift-y, 0px), 0)
+    scale(var(--eye-scale, 1));
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.eye-whisper::before,
+.eye-whisper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.eye-whisper::before {
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(17, 9, 14, 0.98) 0%,
+      rgba(17, 9, 14, 0.22) 18%,
+      rgba(17, 9, 14, 0.18) 82%,
+      rgba(17, 9, 14, 0.98) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(17, 9, 14, 0.9) 0%,
+      rgba(17, 9, 14, 0.14) 26%,
+      rgba(17, 9, 14, 0.14) 74%,
+      rgba(17, 9, 14, 0.9) 100%
+    );
+}
+
+.eye-whisper::after {
+  inset: 1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 230, 236, 0.08);
+  z-index: 2;
+}
+
+.eye-whisper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: var(--eye-opacity, 0.75);
+  filter: saturate(0.86) contrast(1.04) brightness(0.94);
+  transition:
+    opacity 260ms ease,
+    filter 260ms ease;
+}
+
+.eye-whisper-left {
+  margin-right: auto;
+  transform-origin: left center;
+}
+
+.eye-whisper-center {
+  width: min(88%, 620px);
+  margin-inline: auto;
+  transform-origin: center center;
+}
+
+.eye-whisper-right {
+  margin-left: auto;
+  transform-origin: right center;
+}
+
 .letter-title {
   position: relative;
   margin: 0 0 1.5rem;
@@ -724,6 +809,12 @@ h2 {
     height: 70vh;
     min-height: 560px;
     padding: 1.3rem;
+  }
+
+  .eye-whisper,
+  .eye-whisper-center {
+    width: 100%;
+    height: 92px;
   }
 
   .memory-frame {

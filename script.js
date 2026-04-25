@@ -1,6 +1,9 @@
 const floatingHearts = document.querySelector(".floating-hearts");
 const year = document.querySelector("#year");
+const letterScroll = document.querySelector(".letter-scroll");
+const eyeWhispers = Array.from(document.querySelectorAll(".eye-whisper"));
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let eyeFrame = 0;
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -31,10 +34,56 @@ function createHeart() {
   }, duration * 1000);
 }
 
+function updateEyeWhispers() {
+  eyeFrame = 0;
+
+  if (!letterScroll || !eyeWhispers.length) return;
+
+  const viewportCenter = letterScroll.scrollTop + letterScroll.clientHeight / 2;
+  const viewportSize = letterScroll.clientHeight;
+
+  eyeWhispers.forEach((eye) => {
+    const eyeCenter = eye.offsetTop + eye.offsetHeight / 2;
+    const distance = Math.abs(viewportCenter - eyeCenter);
+    const visibility = Math.max(0, 1 - distance / (viewportSize * 0.9));
+    const direction = eye.classList.contains("eye-whisper-right")
+      ? -1
+      : eye.classList.contains("eye-whisper-center")
+        ? 0
+        : 1;
+    const opacity = reducedMotion.matches
+      ? 0.75
+      : 0.24 + visibility * 0.51;
+    const shiftY = reducedMotion.matches ? 0 : (0.5 - visibility) * 28;
+    const shiftX = reducedMotion.matches ? 0 : (1 - visibility) * 12 * direction;
+    const scale = reducedMotion.matches ? 1 : 0.98 + visibility * 0.08;
+
+    eye.style.setProperty("--eye-opacity", opacity.toFixed(2));
+    eye.style.setProperty("--eye-shift-x", `${shiftX.toFixed(2)}px`);
+    eye.style.setProperty("--eye-shift-y", `${shiftY.toFixed(2)}px`);
+    eye.style.setProperty("--eye-scale", scale.toFixed(3));
+  });
+}
+
+function requestEyeUpdate() {
+  if (eyeFrame) return;
+
+  eyeFrame = window.requestAnimationFrame(updateEyeWhispers);
+}
+
 if (!reducedMotion.matches) {
   for (let index = 0; index < 16; index += 1) {
     window.setTimeout(createHeart, index * 280);
   }
 
   window.setInterval(createHeart, 520);
+}
+
+if (letterScroll && eyeWhispers.length) {
+  updateEyeWhispers();
+
+  if (!reducedMotion.matches) {
+    letterScroll.addEventListener("scroll", requestEyeUpdate, { passive: true });
+    window.addEventListener("resize", requestEyeUpdate);
+  }
 }
