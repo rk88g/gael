@@ -281,48 +281,48 @@ h1 span {
 .card-spark {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 28% 24%, rgba(255, 187, 203, 0.22), transparent 22%),
-    radial-gradient(circle at 68% 12%, rgba(255, 131, 164, 0.18), transparent 18%),
-    radial-gradient(circle at 52% 72%, rgba(255, 214, 168, 0.1), transparent 24%);
-}
-
-.memory-frame {
-  position: absolute;
-  top: 1.9rem;
-  left: 1.9rem;
-  width: clamp(160px, 38%, 190px);
-  aspect-ratio: 5 / 6;
-  margin: 0;
-  padding: 0.45rem;
-  border-radius: 28px;
-  background:
-    linear-gradient(180deg, rgba(255, 233, 240, 0.18), rgba(255, 255, 255, 0.04)),
-    rgba(17, 10, 16, 0.88);
-  border: 1px solid rgba(255, 217, 228, 0.16);
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.34),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
   overflow: hidden;
 }
 
-.memory-frame::after {
+.card-spark::before,
+.card-spark::after {
   content: "";
   position: absolute;
-  inset: 0.45rem;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 232, 238, 0.1);
   pointer-events: none;
 }
 
-.memory-frame img {
+.card-spark::before {
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 10, 15, 0.14) 0%,
+      rgba(17, 10, 15, 0.1) 22%,
+      rgba(17, 10, 15, 0.36) 52%,
+      rgba(17, 10, 15, 0.9) 82%,
+      rgba(17, 10, 15, 0.98) 100%
+    ),
+    radial-gradient(circle at 74% 18%, rgba(255, 108, 154, 0.24), transparent 24%),
+    radial-gradient(circle at 24% 14%, rgba(255, 214, 168, 0.12), transparent 28%);
+}
+
+.card-spark::after {
+  inset: 1rem;
+  border-radius: calc(var(--radius-xl) - 10px);
+  border: 1px solid rgba(255, 232, 238, 0.08);
+  z-index: 2;
+}
+
+.card-spark img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 22px;
   object-fit: cover;
-  object-position: center;
-  filter: saturate(1.02) contrast(1.02);
+  object-position: center 22%;
+  filter: saturate(1.02) contrast(1.04) brightness(0.78);
 }
 
 .mini-title {
@@ -752,10 +752,6 @@ h2 {
     min-height: 320px;
   }
 
-  .memory-frame {
-    width: clamp(170px, 42%, 220px);
-  }
-
   .reasons-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -815,18 +811,6 @@ h2 {
   .eye-whisper-center {
     width: 100%;
     height: 92px;
-  }
-
-  .memory-frame {
-    top: 1.2rem;
-    left: 1.2rem;
-    width: 150px;
-    border-radius: 24px;
-  }
-
-  .memory-frame::after,
-  .memory-frame img {
-    border-radius: 18px;
   }
 
   .letter-title {
