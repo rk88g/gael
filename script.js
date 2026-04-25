@@ -2,6 +2,16 @@ const floatingHearts = document.querySelector(".floating-hearts");
 const year = document.querySelector("#year");
 const letterScroll = document.querySelector(".letter-scroll");
 const eyeWhispers = Array.from(document.querySelectorAll(".eye-whisper"));
+const proposalOpenButton = document.querySelector("[data-proposal-open]");
+const proposalShell = document.querySelector("#proposal-shell");
+const proposalModal = document.querySelector("#proposal-modal");
+const proposalYesButton = document.querySelector("[data-proposal-yes]");
+const proposalNoButton = document.querySelector("[data-proposal-no]");
+const celebrationShell = document.querySelector("#proposal-celebration");
+const celebrationCloseButton = document.querySelector("[data-celebration-close]");
+const confettiLayer = document.querySelector("[data-celebration-confetti]");
+const balloonLayer = document.querySelector("[data-celebration-balloons]");
+const fireworkLayer = document.querySelector("[data-celebration-fireworks]");
 const trailText = ["G", "\u2665", "A", "\u2665", "E", "\u2665", "L"];
 const finePointer = window.matchMedia("(pointer: fine)");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -23,9 +33,15 @@ let eyeFrame = 0;
 let heartIntervalId = 0;
 let heartBurstTimeouts = [];
 let effectsInitialized = false;
+let proposalAccepted = false;
+let celebrationCleanupTimeout = 0;
+let lastProposalPosition = null;
 
 const trailSampleStep = 8;
 const trailHistorySize = trailText.length * trailSampleStep + 18;
+const confettiPalette = ["#ff7aa5", "#ffd58d", "#fff0c6", "#ff98bb", "#ffc7da"];
+const balloonPalette = ["#ff89af", "#ffb7cb", "#ffd48f", "#f96f96", "#ffe2a8"];
+const fireworkPalette = ["#ff8bb2", "#ffd898", "#fff1b9", "#ff6f99", "#ffc4d8"];
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -119,6 +135,223 @@ function initCursorTrail() {
   window.addEventListener("pointermove", handlePointerMove, { passive: true });
   window.addEventListener("mouseleave", deactivateTrail);
   window.addEventListener("blur", deactivateTrail);
+}
+
+function randomBetween(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function bounceProposalModal() {
+  if (!proposalModal) return;
+
+  proposalModal.classList.remove("is-hopping");
+  void proposalModal.offsetWidth;
+  proposalModal.classList.add("is-hopping");
+}
+
+function positionProposalModal(center = false) {
+  if (!proposalModal) return;
+
+  const rect = proposalModal.getBoundingClientRect();
+  const padding = 24;
+  const halfWidth = rect.width / 2;
+  const halfHeight = rect.height / 2;
+  const minLeft = padding + halfWidth;
+  const maxLeft = Math.max(minLeft, window.innerWidth - padding - halfWidth);
+  const minTop = padding + halfHeight;
+  const maxTop = Math.max(minTop, window.innerHeight - padding - halfHeight);
+
+  let nextLeft = window.innerWidth / 2;
+  let nextTop = window.innerHeight / 2;
+
+  if (!center) {
+    let attempts = 0;
+
+    do {
+      nextLeft = randomBetween(minLeft, maxLeft);
+      nextTop = randomBetween(minTop, maxTop);
+      attempts += 1;
+    } while (
+      lastProposalPosition &&
+      Math.hypot(nextLeft - lastProposalPosition.x, nextTop - lastProposalPosition.y) < 150 &&
+      attempts < 12
+    );
+  }
+
+  lastProposalPosition = { x: nextLeft, y: nextTop };
+  proposalModal.style.left = `${nextLeft}px`;
+  proposalModal.style.top = `${nextTop}px`;
+  bounceProposalModal();
+}
+
+function openProposalModal() {
+  if (!proposalShell || !proposalModal) return;
+
+  proposalShell.classList.add("is-open");
+  proposalShell.setAttribute("aria-hidden", "false");
+
+  window.requestAnimationFrame(() => {
+    positionProposalModal(!lastProposalPosition);
+  });
+}
+
+function closeProposalModal() {
+  if (!proposalShell) return;
+
+  proposalShell.classList.remove("is-open");
+  proposalShell.setAttribute("aria-hidden", "true");
+}
+
+function clearCelebrationScene() {
+  if (celebrationCleanupTimeout) {
+    window.clearTimeout(celebrationCleanupTimeout);
+    celebrationCleanupTimeout = 0;
+  }
+
+  [confettiLayer, balloonLayer, fireworkLayer].forEach((layer) => {
+    if (layer) {
+      layer.textContent = "";
+    }
+  });
+}
+
+function createConfettiBurst() {
+  if (!confettiLayer) return;
+
+  for (let index = 0; index < 48; index += 1) {
+    const piece = document.createElement("span");
+    piece.className = "celebration-confetti-piece";
+    piece.style.setProperty("--confetti-left", `${randomBetween(0, 100).toFixed(2)}%`);
+    piece.style.setProperty("--confetti-drift", `${randomBetween(-120, 120).toFixed(0)}px`);
+    piece.style.setProperty("--confetti-duration", `${randomBetween(2.8, 4.4).toFixed(2)}s`);
+    piece.style.setProperty("--confetti-delay", `${randomBetween(0, 0.9).toFixed(2)}s`);
+    piece.style.setProperty("--confetti-rotate", `${randomBetween(0, 360).toFixed(0)}deg`);
+    piece.style.setProperty(
+      "--confetti-color",
+      confettiPalette[index % confettiPalette.length]
+    );
+    confettiLayer.appendChild(piece);
+  }
+}
+
+function createBalloonBurst() {
+  if (!balloonLayer) return;
+
+  for (let index = 0; index < 11; index += 1) {
+    const balloon = document.createElement("span");
+    balloon.className = "celebration-balloon";
+    balloon.style.setProperty("--balloon-left", `${randomBetween(2, 94).toFixed(2)}%`);
+    balloon.style.setProperty("--balloon-width", `${randomBetween(48, 78).toFixed(0)}px`);
+    balloon.style.setProperty("--balloon-drift", `${randomBetween(-80, 80).toFixed(0)}px`);
+    balloon.style.setProperty("--balloon-duration", `${randomBetween(5.8, 8.6).toFixed(2)}s`);
+    balloon.style.setProperty("--balloon-delay", `${randomBetween(0, 0.9).toFixed(2)}s`);
+    balloon.style.setProperty(
+      "--balloon-color",
+      balloonPalette[index % balloonPalette.length]
+    );
+    balloonLayer.appendChild(balloon);
+  }
+}
+
+function createFireworkBurst() {
+  if (!fireworkLayer) return;
+
+  for (let index = 0; index < 8; index += 1) {
+    const firework = document.createElement("span");
+    firework.className = "celebration-firework";
+    firework.style.setProperty("--firework-left", `${randomBetween(14, 86).toFixed(2)}%`);
+    firework.style.setProperty("--firework-top", `${randomBetween(10, 54).toFixed(2)}%`);
+    firework.style.setProperty("--firework-duration", `${randomBetween(1.2, 1.8).toFixed(2)}s`);
+    firework.style.setProperty("--firework-delay", `${randomBetween(0, 1.2).toFixed(2)}s`);
+    firework.style.setProperty(
+      "--firework-color",
+      fireworkPalette[index % fireworkPalette.length]
+    );
+    fireworkLayer.appendChild(firework);
+  }
+}
+
+function triggerCelebrationHearts() {
+  if (!floatingHearts) return;
+
+  for (let index = 0; index < 26; index += 1) {
+    const timeoutId = window.setTimeout(createHeart, index * 110);
+    heartBurstTimeouts.push(timeoutId);
+  }
+}
+
+function openCelebration() {
+  if (!celebrationShell) return;
+
+  clearCelebrationScene();
+  celebrationShell.classList.add("is-active");
+  celebrationShell.setAttribute("aria-hidden", "false");
+
+  if (!reducedMotion.matches) {
+    createConfettiBurst();
+    createBalloonBurst();
+    createFireworkBurst();
+    triggerCelebrationHearts();
+  }
+
+  celebrationCleanupTimeout = window.setTimeout(() => {
+    clearCelebrationScene();
+  }, 9400);
+}
+
+function closeCelebration() {
+  if (!celebrationShell) return;
+
+  celebrationShell.classList.remove("is-active");
+  celebrationShell.setAttribute("aria-hidden", "true");
+}
+
+function handleProposalOpen() {
+  if (proposalAccepted) {
+    openCelebration();
+    return;
+  }
+
+  openProposalModal();
+}
+
+function handleProposalNo() {
+  positionProposalModal(false);
+}
+
+function handleProposalYes() {
+  proposalAccepted = true;
+  closeProposalModal();
+  openCelebration();
+
+  if (proposalOpenButton) {
+    proposalOpenButton.textContent = "Ya eres el amor de mi vida";
+    proposalOpenButton.classList.add("is-accepted");
+  }
+}
+
+function initProposalExperience() {
+  if (!proposalOpenButton || !proposalModal) return;
+
+  proposalOpenButton.addEventListener("click", handleProposalOpen);
+
+  if (proposalNoButton) {
+    proposalNoButton.addEventListener("click", handleProposalNo);
+  }
+
+  if (proposalYesButton) {
+    proposalYesButton.addEventListener("click", handleProposalYes);
+  }
+
+  if (celebrationCloseButton) {
+    celebrationCloseButton.addEventListener("click", closeCelebration);
+  }
+
+  window.addEventListener("resize", () => {
+    if (proposalShell?.classList.contains("is-open")) {
+      positionProposalModal(false);
+    }
+  });
 }
 
 function startCursorTrailAnimation() {
@@ -292,6 +525,7 @@ function initEffects() {
 
   startFloatingHearts();
   initCursorTrail();
+  initProposalExperience();
   window.addEventListener("pointerdown", handlePointerDown, { passive: true });
   document.addEventListener("visibilitychange", handleVisibilityChange);
 

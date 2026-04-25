@@ -44,7 +44,10 @@
           </p>
 
           <div class="hero-actions">
-            
+            <button class="button button-primary proposal-launch" type="button" data-proposal-open>
+              &iquest;Quieres ser el amor de mi vida?
+            </button>
+            <a href="#letter" class="button button-secondary">Leer la carta</a>
           </div>
         </div>
 
@@ -359,6 +362,48 @@
           </div>
         </section>
       </main>
+
+      <div class="proposal-modal-shell" id="proposal-shell" aria-hidden="true">
+        <section
+          class="proposal-modal"
+          id="proposal-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="proposal-title"
+        >
+          <p class="proposal-kicker">Pregunta importante</p>
+          <h3 id="proposal-title">&iquest;Quieres ser el amor de mi vida?</h3>
+          <p class="proposal-copy">
+            Quiero seguir construyendo todo esto contigo, paso a paso y con todo
+            mi corazon.
+          </p>
+          <div class="proposal-actions">
+            <button class="button button-primary proposal-yes" type="button" data-proposal-yes>
+              SI
+            </button>
+            <button class="button button-secondary proposal-no" type="button" data-proposal-no>
+              NO
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <section class="proposal-celebration" id="proposal-celebration" aria-hidden="true">
+        <div class="celebration-confetti" aria-hidden="true" data-celebration-confetti></div>
+        <div class="celebration-balloons" aria-hidden="true" data-celebration-balloons></div>
+        <div class="celebration-fireworks" aria-hidden="true" data-celebration-fireworks></div>
+        <article class="celebration-card">
+          <p class="celebration-kicker">Gracias por decir que si</p>
+          <h2>Gracias, espero lograr todo contigo!</h2>
+          <p>
+            Quiero que esta historia siga brillando contigo, entre risas,
+            abrazos, paciencia y todo el amor que nos falta vivir.
+          </p>
+          <button class="button button-secondary celebration-close" type="button" data-celebration-close>
+            Seguir leyendo
+          </button>
+        </article>
+      </section>
 
       <footer class="footer reveal">
         <p>

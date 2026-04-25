@@ -325,6 +325,259 @@ h1 span {
   background: rgba(255, 255, 255, 0.05);
 }
 
+.proposal-launch.is-accepted {
+  background: linear-gradient(135deg, #ffd59a 0%, #ff8ea8 100%);
+  color: #2a0912;
+}
+
+.proposal-modal-shell,
+.proposal-celebration {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    visibility 220ms ease;
+}
+
+.proposal-modal-shell {
+  z-index: 70;
+  visibility: hidden;
+  background: rgba(8, 4, 8, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.proposal-modal-shell.is-open,
+.proposal-celebration.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.proposal-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(360px, calc(100vw - 2rem));
+  padding: 1.45rem;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 215, 227, 0.14);
+  background:
+    linear-gradient(180deg, rgba(46, 16, 31, 0.98), rgba(18, 10, 16, 0.98));
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  transform: translate(-50%, -50%) scale(0.92);
+  transition:
+    left 240ms ease,
+    top 240ms ease,
+    transform 220ms ease;
+}
+
+.proposal-modal-shell.is-open .proposal-modal {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.proposal-modal.is-hopping {
+  animation: proposalHop 320ms ease;
+}
+
+.proposal-kicker,
+.celebration-kicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.proposal-modal h3,
+.celebration-card h2 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.95;
+}
+
+.proposal-copy,
+.celebration-card p {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.proposal-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+.proposal-actions .button {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.proposal-celebration {
+  z-index: 75;
+  visibility: hidden;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 166, 192, 0.16), transparent 22%),
+    radial-gradient(circle at 80% 18%, rgba(255, 215, 150, 0.14), transparent 22%),
+    linear-gradient(180deg, rgba(17, 8, 14, 0.8), rgba(5, 3, 7, 0.92));
+  backdrop-filter: blur(8px);
+}
+
+.proposal-celebration::before,
+.proposal-celebration::after {
+  content: "";
+  position: absolute;
+  inset: auto;
+  width: 40vw;
+  height: 40vw;
+  max-width: 520px;
+  max-height: 520px;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.proposal-celebration::before {
+  top: -8rem;
+  left: -10rem;
+  background: radial-gradient(circle, rgba(255, 122, 171, 0.38), transparent 65%);
+}
+
+.proposal-celebration::after {
+  right: -10rem;
+  bottom: -8rem;
+  background: radial-gradient(circle, rgba(255, 213, 137, 0.28), transparent 68%);
+}
+
+.celebration-confetti,
+.celebration-balloons,
+.celebration-fireworks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.celebration-card {
+  position: relative;
+  z-index: 2;
+  width: min(560px, calc(100vw - 2rem));
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+  border-radius: 34px;
+  border: 1px solid rgba(255, 226, 235, 0.14);
+  background:
+    linear-gradient(180deg, rgba(44, 16, 31, 0.96), rgba(16, 9, 14, 0.98));
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.44),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  text-align: center;
+}
+
+.celebration-card .button {
+  margin-top: 1.4rem;
+}
+
+.celebration-confetti-piece {
+  position: absolute;
+  top: -14vh;
+  left: var(--confetti-left);
+  width: 12px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--confetti-color);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
+  opacity: 0.92;
+  transform: rotate(var(--confetti-rotate));
+  animation: confettiFall var(--confetti-duration) linear forwards;
+  animation-delay: var(--confetti-delay);
+}
+
+.celebration-balloon {
+  position: absolute;
+  left: var(--balloon-left);
+  bottom: -24vh;
+  width: var(--balloon-width);
+  height: calc(var(--balloon-width) * 1.26);
+  border-radius: 50% 50% 46% 46%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.34), transparent 22%),
+    var(--balloon-color);
+  box-shadow:
+    inset -10px -18px 20px rgba(0, 0, 0, 0.08),
+    0 18px 40px rgba(0, 0, 0, 0.16);
+  animation: balloonFloat var(--balloon-duration) ease-in forwards;
+  animation-delay: var(--balloon-delay);
+}
+
+.celebration-balloon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 12px;
+  height: 14px;
+  background: inherit;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: translateX(-50%);
+}
+
+.celebration-balloon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2px;
+  height: 110px;
+  background: linear-gradient(180deg, rgba(255, 229, 236, 0.7), transparent);
+  transform: translateX(-50%);
+}
+
+.celebration-firework {
+  position: absolute;
+  left: var(--firework-left);
+  top: var(--firework-top);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.96), var(--firework-color) 45%, transparent 72%);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--firework-color) 70%, white 30%);
+  opacity: 0;
+  animation: fireworkCore var(--firework-duration) ease-out forwards;
+  animation-delay: var(--firework-delay);
+}
+
+.celebration-firework::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.16);
+  box-shadow:
+    0 -54px 0 0 var(--firework-color),
+    38px -38px 0 0 var(--firework-color),
+    54px 0 0 0 var(--firework-color),
+    38px 38px 0 0 var(--firework-color),
+    0 54px 0 0 var(--firework-color),
+    -38px 38px 0 0 var(--firework-color),
+    -54px 0 0 0 var(--firework-color),
+    -38px -38px 0 0 var(--firework-color);
+  opacity: 0;
+  animation: fireworkBurst var(--firework-duration) ease-out forwards;
+  animation-delay: var(--firework-delay);
+}
+
 .hero-card,
 .promise-strip,
 .letter-card,
@@ -851,6 +1104,74 @@ h2 {
   }
 }
 
+@keyframes proposalHop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translate3d(0, -6vh, 0) rotate(var(--confetti-rotate)) scale(0.8);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.96;
+  }
+  100% {
+    transform: translate3d(var(--confetti-drift), 115vh, 0) rotate(calc(var(--confetti-rotate) + 420deg)) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes balloonFloat {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.98;
+  }
+  100% {
+    transform: translate3d(var(--balloon-drift), -125vh, 0) rotate(5deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fireworkCore {
+  0% {
+    transform: scale(0.12);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fireworkBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.16);
+    opacity: 0;
+  }
+  24% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     grid-template-columns: 1fr;
@@ -874,6 +1195,10 @@ h2 {
 
   .letter-card {
     height: min(72vh, 820px);
+  }
+
+  .proposal-modal {
+    width: min(340px, calc(100vw - 1.4rem));
   }
 }
 
@@ -932,6 +1257,19 @@ h2 {
     right: 2rem;
     width: 54px;
     height: 54px;
+  }
+
+  .proposal-actions {
+    flex-direction: column;
+  }
+
+  .proposal-actions .button,
+  .celebration-card .button {
+    width: 100%;
+  }
+
+  .celebration-card {
+    border-radius: 28px;
   }
 }
 
