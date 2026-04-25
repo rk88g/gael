@@ -70,6 +70,50 @@ body::selection {
   user-select: none;
 }
 
+.touch-gael-wave {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--wave-size, 170px);
+  height: var(--wave-size, 170px);
+  pointer-events: none;
+  z-index: 41;
+  transform: translate(-50%, -50%);
+}
+
+.touch-gael-ring,
+.touch-gael-text {
+  position: absolute;
+  inset: 0;
+}
+
+.touch-gael-ring {
+  border-radius: 50%;
+  border: 1px solid rgba(255, 189, 213, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 26px rgba(255, 91, 135, 0.2);
+  animation: gaelWave 1200ms ease-out forwards;
+}
+
+.touch-gael-ring-secondary {
+  animation-delay: 140ms;
+}
+
+.touch-gael-text {
+  display: grid;
+  place-items: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1rem, 3.6vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  color: rgba(255, 233, 240, 0.94);
+  text-shadow:
+    0 0 16px rgba(255, 108, 154, 0.24),
+    0 0 34px rgba(255, 108, 154, 0.1);
+  animation: gaelWaveText 1200ms ease-out forwards;
+}
+
 .page-shell {
   position: relative;
   isolation: isolate;
@@ -770,6 +814,34 @@ h2 {
   }
 }
 
+@keyframes gaelWave {
+  0% {
+    transform: scale(0.18);
+    opacity: 0.72;
+  }
+  70% {
+    opacity: 0.24;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes gaelWaveText {
+  0% {
+    transform: scale(0.72);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.94;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     grid-template-columns: 1fr;
@@ -854,8 +926,18 @@ h2 {
   }
 }
 
+@media (hover: none), (pointer: coarse) {
+  .cursor-name-trail {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cursor-name-trail {
+    display: none;
+  }
+
+  .touch-gael-wave {
     display: none;
   }
 
